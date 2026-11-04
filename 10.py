@@ -7,63 +7,41 @@ def winner(b):
     for a, c, d in WINS:
         if b[a] == b[c] == b[d] != " ":
             return b[a]
-
+    
 def show(b):
     cells = [c if c != " " else str(i + 1) for i, c in enumerate(b)]
     rows = [" " + " | ".join(cells[i:i+3]) for i in (0, 3, 6)]
     print("\n" + "\n---+---+---\n".join(rows) + "\n")
 
-def minimax(b, ai_turn):
-    """Score for AI ('O'): +1 win, -1 loss, 0 draw."""
+def minimax(b, ai):
     w = winner(b)
-    if w:
-        return 1 if w == "O" else -1
-    if " " not in b:
-        return 0
-    scores = []
-    for i in range(9):
-        if b[i] == " ":
-            b[i] = "O" if ai_turn else "X"
-            scores.append(minimax(b, not ai_turn))
-            b[i] = " "
-    return max(scores) if ai_turn else min(scores)
+    if w: return 1 if w == "O" else -1
+    if " " not in b: return 0
+    s = [minimax(b[:i] + ["O" if ai else "X"] + b[i+1:], not ai) for i in range(9) if b[i] == " "]
+    return max(s) if ai else min(s)
 
 def ai_move(b):
-    def score(i):
-        b[i] = "O"
-        s = minimax(b, False)
-        b[i] = " "
-        return s
-    return max((i for i in range(9) if b[i] == " "), key=score)
+    return max((i for i in range(9) if b[i] == " "), key=lambda i: minimax(b[:i] + ["O"] + b[i+1:], False))
 
 def play():
-    scores = {"X": 0, "O": 0, "Draw": 0}
+    sc = {"X": 0, "O": 0, "Draw": 0}
     while True:
-        b, turn = [" "] * 9, "X"
-        vs_ai = input("1) Human vs Human  2) Human vs AI: ").strip() == "2"
-
+        b, t, ai = [" "] * 9, "X", input("1) Human vs Human  2) Human vs AI: ").strip() == "2"
         while not winner(b) and " " in b:
             show(b)
-            if vs_ai and turn == "O":
-                move = ai_move(b)
+            if ai and t == "O":
+                m = ai_move(b)
             else:
-                pos = input(f"Player {turn}, choose (1-9): ")
-                if not pos.isdigit() or not 1 <= int(pos) <= 9 or b[int(pos) - 1] != " ":
-                    print("Invalid move, try again.")
-                    continue
-                move = int(pos) - 1
-            b[move] = turn
-            turn = "O" if turn == "X" else "X"
-
+                p = input(f"Player {t}, choose (1-9): ")
+                if not (p.isdigit() and 1 <= int(p) <= 9 and b[int(p) - 1] == " "):
+                    print("Invalid move."); continue
+                m = int(p) - 1
+            b[m], t = t, "OX"[t == "O"]
         show(b)
-        result = winner(b) or "Draw"
-        scores[result] += 1
-        print("It's a draw!" if result == "Draw" else f"Player {result} wins!")
-        print(f"Scores -> X: {scores['X']}  O: {scores['O']}  Draws: {scores['Draw']}")
-
-        if input("\nPlay again? (y/n): ").lower().strip() != "y":
-            print("Thanks for playing!")
-            break
+        r = winner(b) or "Draw"
+        sc[r] += 1
+        print("Draw!" if r == "Draw" else f"Player {r} wins!", sc)
+        if input("Play again? (y/n): ").lower().strip() != "y": break
 
 if __name__ == "__main__":
     play()
