@@ -1,23 +1,22 @@
-#BFS implementation
-graph = {
-    'A': ['B', 'C'],
-    'B': ['D', 'E'],
-    'C': ['F'],
-    'D': [],
-    'E': ['F'],
-    'F': []
+
+g = {
+    'A':['B','C'],
+    'B':['D','E'],
+    'C':['F'],
+    'D':[],
+    'E':['F'],
+    'F':[]
 }
 
-def bfs(start):
-    visited = {start}
-    queue = [start]
+def bfs(v):
+    vis = set()
+    q = [v]
 
-    while queue:
-        node = queue.pop(0)
-        print(node, end=" ")
-        for n in graph[node]:
-            if n not in visited:
-                visited.add(n)
-                queue.append(n)
+    while q:
+        x = q.pop(0)
+        if x not in vis:
+            print(x,end=' ')
+            vis.add(x)
+            q.extend(g[x])
 
 bfs('A')
