@@ -1,34 +1,34 @@
 import heapq
 
-def astar(graph, start, goal, h):
-    pq = [(h[start], 0, start, [])]
-    visited = set()
-
-    while pq:
-        f, cost, node, path = heapq.heappop(pq)
-
-        if node in visited:
-            continue
-        visited.add(node)
-        path = path + [node]
-
-        if node == goal:
-            return path, cost
-
-        for next, c in graph[node]:
-            new_cost = cost + c
-            heapq.heappush(pq, (new_cost + h[next], new_cost, next, path))
-
-graph = {
-    'A': [('B', 1), ('C', 3)],
-    'B': [('D', 2)],
-    'C': [('D', 1)],
-    'D': [('E', 2)],
-    'E': []
+g = {
+    'A':{'B':2,'C':5},
+    'B':{'D':4,'E':2},
+    'C':{'H':2},
+    'D':{'G':3},
+    'E':{'G':2,'H':3},
+    'H':{'G':1},
+    'G':{}
 }
 
-h = {'A': 4, 'B': 3, 'C': 2, 'D': 1, 'E': 0}
+h = {'A':6,'B':4,'C':4,'D':3,'E':2,'H':1,'G':0}
 
-path, cost = astar(graph, 'A', 'E', h)
-print("Path:", path)
-print("Cost:", cost)
+def astar(start,goal):
+    q = [(h[start],start,0,[start])]
+    vis = set()
+
+    while q:
+        f,v,cost,path = heapq.heappop(q)
+
+        if v == goal:
+            return path,cost
+
+        if v not in vis:
+            vis.add(v)
+            for n,w in g[v].items():
+                if n not in vis:
+                    new = cost + w
+                    heapq.heappush(q,(new+h[n],n,new,path+[n]))
+
+path,cost = astar('A','G')
+print("Path:",path)
+print("Cost:",cost)
