@@ -1,11 +1,4 @@
 def minimax(depth, node_index, is_max, scores, target_depth):
-    """
-    depth: current depth in tree
-    node_index: index of current node
-    is_max: True if it's maximizer's turn
-    scores: list of leaf node values
-    target_depth: depth of leaf nodes
-    """
 
     # If leaf node is reached, return score
     if depth == target_depth:
