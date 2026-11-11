@@ -1,41 +1,33 @@
+
 import heapq
 
-def best_first_search(graph, start, goal, h):
-    visited = set()
-    pq = [(h[start], start)]
-
-    while pq:
-        h_value, node = heapq.heappop(pq)
-        print(node, end=" ")
-
-        if node == goal:
-            print("\nGoal reached!")
-            return
-
-        visited.add(node)
-
-        for n in graph[node]:
-            if n not in visited:
-                heapq.heappush(pq, (h[n], n))
-
-    print("\nGoal not found!")
-
-graph = {
-    'A':['B','C'], 
-    'B':['D','E'], 
-    'C':['F'],
-    'D':[], 
-    'E':['F'], 
-    'F':[]
+g = {
+    'A':['B','C'],
+    'B':['D','E'],
+    'C':['G'],
+    'D':[],
+    'E':['F'],
+    'F':[],
+    'G':[]
 }
 
-h = {'A':6, 
-     'B':5, 
-     'C':3, 
-     'D':4, 
-     'E':1, 
-     'F':0
-    }
+h = {'A':5,'B':3,'C':2,'D':6,'E':1,'F':0,'G':4}
 
-best_first_search(graph, 'A', 'F', h)
+def best(v,goal):
+    vis = set()
+    q = [(h[v],v)]
 
+    while q:
+        _,x = heapq.heappop(q)
+        print("Visiting:",x)
+
+        if x == goal:
+            print("Goal reached!")
+            return
+
+        if x not in vis:
+            vis.add(x)
+            for n in g[x]:
+                heapq.heappush(q,(h[n],n))
+
+best('A','F')
