@@ -1,21 +1,15 @@
+
 import random
 
 def f(x):
-    return -(x**2 - 4*x + 6)
+    return -(x*x-4*x+6)
 
-def hill_climb(iterations=100, step=0.1):
-    x = random.uniform(-5, 5)
+x=random.uniform(-5,5)
 
-    for i in range(iterations):
-        new_x = x + random.uniform(-step, step)
+for i in range(100):
+    n=x+random.uniform(-0.1,0.1)
+    if f(n)>f(x):
+        x=n
 
-        if f(new_x) > f(x):
-            x = new_x
-
-    return x, f(x)
-
-x, value = hill_climb()
-
-print("Best x =", round(x, 3))
-print("Value =", round(value, 3))
-
+print("Best x =",round(x,3))
+print("Value =",round(f(x),3))
